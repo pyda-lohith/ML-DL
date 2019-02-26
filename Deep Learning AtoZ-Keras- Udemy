@@ -1,0 +1,351 @@
+                                                                                                                Theano:
+Numerical computations library
+fast numerical computations
+run on cpu as well as gpu
+
+gpu- better choice for neural networks
+
+Tensor flow:
+open source numerical computations library
+run on cpu as well as gpu
+
+these two library used for deep learning 
+
+Keras:
+wraps up two libraries theano and tensor flow
+build powerful neural networks with few lines of code very effeciently.
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Keras Modelling:
+Sequential- Required to intialize neural networks
+Dense Module- To build layers in neural networks
+
+outputdim= no of nodes we are adding
+How many nodes?
+it is art.. 
+if data is linealy separable we dont need hidden network.
+tip:  average of nodes in input and output layer
+or else experiment with parameter tuning technique like k-fold cross validation
+
+init= corresponds to step1 of sctochastic gradient descent.
+Randomly intilaize the weights close to zero.. we will randomly intialize using uniform function i.e glorot_uniform 
+
+Activation= activation function we want to chose for hidden layer i.e rectifier functiom
+
+input_dim= no of nodes in the input layer i.e no of independent nodes.. no need to give input_dim for next hidden layers
+
+sigmoid function is used to get the probablistic percentage 
+for if we have 3 class classification then activation function would be softmax
+
+Compiling ANN- Means applying scotastic gradient descent to the whole
+This can be done using compile method 
+
+optimizer- is simply algorithm we are going to use for finding optimal weights
+Because we have intialized only weights but we to have find optimal weights.. i.e sctoastic gradient descent 
+very effecient one is 'adam'
+
+loss= corresponds to loss function this schtocastic gradinet descnet algorithm i.e within adam algorithm
+2 class - binary_crossentropy
+3 class- claasification_crossentropy
+
+metrics- choose to evaluate the model typically accuracy criterion we would use
+
+Confusion matrix:
+batch_size= weights updated for batch size after no of observations( trained in batches the input would be going)
+epoch= basically around when the whole training set passed through the ANN(on how many iteration we want NN to train or on how many time on whole training data
+to be forward propagated in NN and backward propagated to update the weights)
+
+we need to experiemnt for batch size and epochs
+
+Dropout:
+is the solution for overfitting 
+way to detect overfitting is - high variance when applying k-fold validation 
+
+dropout of regularization - at each iteration of training some neurons of artificial neural networks are disabled to prevent from too 
+dependant on each other when they learn the correlation and therefore by overriding these neurons the ANN learns several independant correlations in the data,
+which makes neurons to work independantly.
+
+p- fractions of input units to drop at each iteration ideally (p=0.1 always try) and then increase by 0.1 gradually based on need
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+Convolution neural network
+Feature detector or kernal or filter can be 5*5 or 3*3 
+input image * feature detector = Feature map or activation map
+we will find the no of matches
+1. reduced the size of image easy to process and fast
+2. some info we will loss, but certain parts are integral we get higher number if it matches exactly example 4
+Features if how we see things in the image i.e nose,feater, eyes, black marks etc Feature maps allows us to perserve and get rid of unncessary things and 
+focus on important things 
+we create multiple feature maps because we use multiple filters i.e other way of preserving things 
+in one fetaure map we would detect where certain features are
+in other feature map we would detect where certain features are etc
+
+Relu Layer 
+Additional step on top of convolutional step we apply rectifier function 
+reason we want to increase non-linearity in our image becuase images themselves are highly non-linear especially if we recongnize different objects next
+to each other or background. there will be borders, different colors, differnt borders in out images etc. We applying mathematical operations or convolution 
+and to create our feature maps we risk we might create some linearity so we need to breakup the linearity.
+black=0(negative)   white=1(positive)
+
+Pooling:
+in every single of the images, we want neural networks to recognize all of the chetas as chetas irrespective of different directions , different parts of image,
+lighting is bit different. if it looks for that certain feature that is learnt from certain chetas in an exact location or shape or texture, then it 
+won't recognize other chetas. Neural networks has property called spatial invariance it doesn't care where the fetaures are located in the parts of image. 
+it doesn't care about features are inverted, texture, fetaures are bit closer to each other etc. Neural network has to have some flexibility to recognize that 
+feature that is what pooling about.
+
+max-pooling, sum-pooling etc
+max-pooling : find the max value in that box and record that value
+bacause of taking maximum value therefore we are accounting for distortion. Even if we rotate 4 we will still get the same feature map, we were still able
+to preserve the feature and account for possible spatial or textual distortions.
+1. we are reducing the size by 75% in terms of processing.
+2. we are reducing the number of parameters going to final layer of neural network therefore we are preventing over fitting. Removing the information that way 
+our model won't be able to overfit to that information becuase that information is not relevant. it is important to see feature rather than other 
+noise coming into our eyes.
+
+Flattening:
+pooled feature map after convolution,pooling to the image. we flatten it to column we want to input to ANN  for further processing.
+
+Full connection:
+adding whole ANN to convolutional neural network.
+feature detector are little matrices 3*3 they are adjusted next time to perform better all done through gradient descent back propagation so network
+is optimized.
+
+Softmax & cross-entropy
+softmax:
+propabilities of two fetaures they don't have to add upto 1. softmax function bring addition propabilities upto range of 0 to 1 i.e normalization. 
+
+cross-entropy:
+to optimize network performance we used mean squared error function. In CNN still use MSE, but we use loss function instead of cost function it still the
+same thing in order to maximize the performance.
+cross entropy is less so NN1 outperforming NN2
+
+advantages:
+start of back propagation if output value is very very tiny i.e it is much smaller than the actual value we want then at very start of gradient descent 
+will be very very low, it would be hard for neural network to actually start adjusting weights to move in right direction. If we use cross entropy, 
+because of logarithm it would access even small error.
+
+CNN modelling:
+convolution2D package for images 
+convolution3D package for videos as it varies with time
+Maxpooling2D --> adds pooling layers
+Flatten --> converts all pooled maps to inputs
+
+Press 'i' in front of any function
+
+Convolution2D()- 
+nb_filter- no of filters or feature detectors i.e no of feature maps that we are going to create(most common we start with 32 and increase gradually 64,128,256)
+nb_rows- no of rows of feature detector
+nb_col- no of columns of feature detector
+border_mode --> how feature detector  handles the borders of input image 
+input_shape--> shape of input image- basically are images wont be in same format so will convert all images to same format i.e fixed size 
+black and white --> (1,256,256)
+color image --> (3,256,256)
+since we are using CPU we go with 64,64
+GPU we can use any thing 
+
+order of imput shape parameters--> order used in theano backend , but we are using tensor flow backend so we need to reverse
+we are using rectifier activation function to remove negative pixels values in feature maps (because of convolution we might get negative pixels) also it adds
+non-linearity 
+
+Flattening:
+we directly remove pooling and flatten the image all the pixels of the image we will input and as all the pixels are spatially connected we dont get any 
+information about special structure. As each feature map corresponds to each specific feature of an image through convolution process
+
+Fitting CNN to images:
+shortcut- image augmentation process that basically consists of preprocessing the images to prevent over fitting. 
+Overfitting occurs when we have huge data for training our model in that model find some correleations and fails to generalizes on new observations. But when
+it comes to images we actually need lot of images to find and generalize some correlations.
+
+8000 not much to generalize
+Image augumentation - Data augmentation- create many batches of our images and in each batch it applies random transformation or selection on images 
+like rotating, shifting, flipping etc. Create many more images. All these image augumenation can reduce over-fitting
+
+samples_per_epoch---> corresponds to no of images in training set
+nb_val_samples --> corresponds to no of images in test set
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+RNN Intuition:
+gradient is used to update the weights. The lower the gradient is the harder the networks is to update the weights
+ consider xt-3 the value is smaller and it takes time to converge 
+ xt-2 the value is little smaller it takes less time than xt-3
+ xt gradient is higher it will converge fast and it gets trained faster
+ weights are not being trained properly, output is incorrect 
+ weights small--> vanishing gradient descent
+ weights large--> exploding gradient descent
+ 
+ c --> memory
+ h --> hidden state
+ 
+ Building RNN:
+ only numpy can be input to neural network in keras so will pass only specific columns 
+ For RNN it is recommended to use normalization rather than standardization. When ever we build RNN and specially sigmoid function as activation layer 
+ to output layer of NN.
+ basically fit will get max and min vakues in the data. Transform will transform the data to 0 and 1(applying formula)
+ 
+ 60times steps and 1 output:
+ At each time t RNN is going to look at 60 stock prices before t i.e stock prices between t and t-60. Based on trend during this time it will try to
+ predict the next output. So 60 time steps of past information from which RNN is going to learn and understand some correlation it will predict next output t+1
+ We can try different no of time steps. 
+ 20,30 time steps not sufficient 
+
+ X_train --> input of NN 60 preview stock price( for each financial day x_train previews stock prices before that day)
+ y_train --> output next stock price at t+1 (will contain stock price for the next financial day)
+ 
+ We should add more dimensionality to the previous data structure and this dimension is unit i.e no of predictors to use to predict. We will add some indictors
+ which be able to predict updwards and downward trends much better. So will use reshape function 
+ batchsize --> no of observations 1198
+ timesteps --> 60 in our case
+ input --> x_train i.e 1
+ so we have 3 dimension i.e batchsize, timestep and stock price(indicators)
+ 
+ LSTM to add lstm layers
+ DROPOUT class is to add drop out regularization(to reduce overfitting)
+ 
+ LSTM Arguments:
+ units -> which is no of lstm cells or units in the lstm layer
+ return_sequence --> parameter should be true if we want to add several lstm layers if it is last layer then it should be false
+ input shape --> shape of inputs contained in x_train i.e 3d first one will automatically take into account second and third we need to specify 
+ 
+ units --> To capture the trends , we can increase the dimensionality by including large no of neurons in each of the lstm layers
+ Dropout --> Dropout rate In tunning the models in ANN and CNN i.e rate of neurons to be dropped i.e ignore in the layers to do regularization 
+ in general it is 20% of neurons in the layer. we will have 20% dropout (10 neurons) of neurons in lstm layer will be ignored during forward and backward
+ propagation in each iteration of the training
+ 
+ 
+if iloc is not used (and if we use length for finding the dataset) then it would be format problem if we use numpy so we would use reshape
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Self Organizing maps:
+som's are used for reducing dimensionality. They take multi-dimensional data set which might have lots and lots of columns which are dimensions of dataset. 
+And of-course lots of lots of arrows and reduce it dimensonality of the status. So basically instead of having 20,30 or 100 columns or even more columns 
+you end up with a map that's why they call self organizing map so you end up of a two dimensional representation of dataset. Purpose to reduce the 
+amount of columns to just two dimensions.
+som's have training data but it doesn't have any labels in the training data. It is not like CNN where it learns from what is seeing and then apply test data. 
+som learn's to group these countries. we can put it into world map which shows exactly these things. Like wise so many different ways and industrial problems 
+we can apply SOM's. 
+
+SOM's Learning: Part1
+Input has 3 features output has more. We have 3 columns but it might  have thousands and thousands of rows which means input data is three dimensional, where as
+output dataset is always a two dimensional map. This is how we reduce from 3D to 2D. They are very differnt to NEURAL networks in supervised learning. it is
+different concept but the same names have different meanings so we might confuse. Weights in SOM is very different from NN. In NN we multiply the weights with 
+input of node and applied activation function, in SOM weights are characteristic of node itself. Each node has its own weights. 
+Now we are going to have competition among these nodes, we are going to go through each of our rows of our dataset and we are going to find out which of these 
+nodes is closest to each of our rows in dataset ( which of these nodes is closest in that original innerspace). Calculate the distance i.e euclidian distance. 
+Here we should make our inputs close to 1 for algorithm to work properly by applying normalization or standardization to the data. we will find best 
+matching unit BMU.
+SOM going to update the weights for the BMU so that it is actually even closer to our first draw in the dataset. we cannot update all the dataset so the only
+thing that can control in that formula are weights of this node in order for it to become closer. Flash means SOM is coming closer to that data point.
+Next step is the whole radius around this best matching unit and every single point every single node of our self-organized map that falls inside that radius 
+is going to have its weights updated to come closer to that row that we matched up with. More closer the weights to the radius more the weights gets updated. If 
+it is far less imoact to update the weights. Lets say 2nd row has best mactching unit somewhere i.e blue. BMU is updated to be closer to that row that we matched
+up with.
+
+SOM's Learning: Part2
+First all the rows that falls into this radius will get updated. For example purple node, all of those knows are updated. So first of all purple node itself
+is updated to be closer to that row that it matched up to be as BMU. so they all are dragged. Kohono alogorithm is applied all the radius gets shrinked as we
+go through the dataset. So the process become more and more accurate as you go through the dataset again and again.
+
+1)Self organizing map does everything it can it possibly can to be as close to data as possible. It becomes like a mosque for your data and therefore it will 
+retain the topology of the inputs which is very valuable for us in terms of understanding our ideas better.
+2) SOM neatly puts it all analyze 20 100 columns for you and then put all of that into map and you will able to see things on tha map very easily.
+3) classify data without supervision as they dont need any labels. It will extract features on its own and their dependencies and similarity correlations which 
+we are not even expecting.
+4) No back propagation in the training of a SOM as we dont have target vector.
+
+Building SOM:
+SOM is going to do customer segemntation, To identify segments of customers and one of customers that potentially cheated. The segment is actually very explicit
+going to be specific range of values in SOM. All the customers are input and these input maps are going to be mapped to output space and between these two 
+we have NN composed of neurons, each neuron is initilized by vector of weights i.e same size as vector of cutomer (15 columns). For each observation point i.e 
+each customer the output of this customer will be the neuron that is closest to the customer. Basically in the network we will pick the neuron that is closest 
+to the customer and is called the winning node. For each customer the winning node is the most similar neuron to that customer and use neighbourhood function like
+guassian function to update the weights of the neighbour of the winning node to move that closer to that point. We will do all this for all the customers
+and will repeat all this many times. And each time it repeated the output space decreases and losses dimensions, it reduces the dimensions little by little and it
+reaches a point where the neighbourhood stops decreasing i.e output space stops decreasing. That's the moment we obtain SOM with 2 dimensions with all the 
+winning nodes.
+When we think about fraud we think about outliers because fraud is basically defined by that is far from general rules. Rules must be respected when applying for 
+credit card. So fraud are outling neurons in the 2 dimension SOM, simpily the outling neurons are far from the rows. How can we detect the outlying neurons in 
+SOM. We need MID mean interneuron distance i.e SOM for each neuron we calculate the euclidian distance between the neighbourhood(we would define the neighburhood)
+Outliers would be far from the neighbourhood. More the MID then more the winning node would be far away from its neighbours i.e outliers(fraud).   
+
+Minisom:
+x,y be the no of dimensions of the grid of SOM. It must not be too small to capture the outliers. So we choose 10,10
+input_len --> no of features in input dataset
+sigma --> radius of different neighbourhoods in the grid default value 1.0
+learning rate--> decides how much the weights are updated in each iteration. Higher the learning rate the faster the convergence.default=0.5
+random_weights_init--> step3 intializing weights from 0 to1
+train_iteration --> method that will apply step 4 to 9 for many iterations 
+
+Larger the MID close the colour white assumption first we will take
+bone is the window function that contain map
+pcolour--> we will use different colour for MID  differnt ranges  i.e all values of mean distances of winning nodes
+som.distance_map()-- > will return all the mean inter neuron distances in matrix, will take transpose of this MID matrix.
+To prove our assumption will add legend i.e colourbar()
+We will get the white colour (high MID value) customers by inverse mapping of winning nodes. We can add some markers to make distinction between the customers 
+who got approval and didn't get approval. using markers()
+red circle --> customers who didn't get approval
+green circle --> customers who got approval
+
+in for loop i --> index of customer database 0 to 689
+x --> vector of value of customer i.e 1st customer all the 15 column values
+for 1st customer will get the winning node and find the winning node using winner method (inside that we will place marker in it). w[0] is x cordinate
+w[1] will be y-cordinate, as we want to place at centre will add 0.5 to x and 0.5 to y.
+In the markers we can colour inside of the marker, will cover only the edge so use markeredgecolour
+We will get the customer fraud details 
+
+key (0,0) --> is the cordinates of the winning node
+for this we get all the list of customers associated with this winning node. 
+Before fraud value we should get the cordinates of outling winning nodes. outling winning nodes has cordinates (8,11), (6,8)
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Mega Course study:
+To move from unsupervised to supervised learning we need a dependant variable
+first we will assume that all the customers are good. Next we will extract the customers who are fraud from frauds variable and replace with 1.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Boltzmann Machines:
+
+All the above 4 models have a direction in which they operates. Boltmann machines are undirected models they don't have ay direction. They doesn't have output
+layer only input and hidden layers. On specific layer everything is connected. 
+Tip: Look at the visible nodes they all are connected.Once input data(row of data) is fixed,there is no point of connection between visible nodes. Boltmann 
+machines they don't expect input data they generate data in all of these nodes regradless of input node or hidden node.
+
+Visible node we can measure, hidden nodes we can't measure.Boltzmann machines it generates parameters on its own. we are going to input the data to the visible
+nodes to help it adjust the weights accordingly so it resemble our system. 
+Benefits: Bz machine how the parameters cordinates each other, what are the constraints.
+
+Energy based modelling:
+Boltzmann equation is used for samplling distribution in boltzmann machine. It talks about propabality of certain states of system. Higher the energy of certain
+state the lower the propabiltiy. Energy is defined by weights of the synapses and when the weights are setup the system based on weights will always try to find 
+lowest energy state of the system. The weights will dictate the lowest energy state.
+
+As we increase the number of nodes the no of connections grows exponentially. So Restriction has come up. Hidden cannot connect eachother and visible node
+cannot connect each other.
+	 
+
+Contrastive Divergence: Algorithms that makes restricted boltzmann machine to learn.
+In ANN Gradient descent allows us to back propagate the error therefore adjust the weights
+In Boltzmann --> 
+first randomly passing some weights at start boltzmann machine calculates the hidden nodes, those hidden nodes uses the exact weights to recalculate 
+the input nodes(may not be same as original). The whole process repeats and is called gibbs sampling. Finally we get reconstructed input values which are such
+that when we feed them into RBM and then we get he same values. We don't go forwards after that. Our network is exactly modelling our input, we can keep the 
+inputs inn and we get the outputs. Weights dictates the shape of the energy curve. System will end up with lowest energy state of the system finally.
+
+Hinton shortcut, First two passes are sufficient to adjust the curve called CD1. By this we can know that which way the ball was rolling (i.e green to red) like
+gradient descent. But we want to adjust your curve here we have control over the curve, we are adjusting the weights because it is energy based process, so that 
+minimum is here(green) We will pull the curve down here and push red up. That way we see that ball is already in minimum no need to go through whole process
+of sampling or adjusting the curve.
+
+Deep Belief network:
+Stacke RMB and then Directionalities in place except for the top 2 layers. This deep belief network thats when depp learning got revived. In terms of training 
+2 types greedy layer wise (each layer as RBM) and WAKE sleep algorithm( Train al the way up and all the way down). 
+
+
+
+Building Boltmann machines:
+Pytorch doesn't work on windows or mac. We need to install VM on top of VM we will install Linux and then into Linux install Anaconda, Pytorch etc.
+
+

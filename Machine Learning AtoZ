@@ -1,0 +1,580 @@
+-------------Data Preprocessing:
+Data processing step is essential for all machine learning models.
+Library is a tool that u can use to make a specific job. If we give the input the library will do the job and give the output.
+In R we dont need to import any libraries.
+
+Imputer class which allows us to take care of missing data.
+
+Encoding categorical variables
+since 1 > 0 and 2>1 the euation in the model think that spain has higher value germany,france and germany has high value than france. There is no 
+relational order between the 3 variables. To prevent this we use dummy encoding of variables.
+We are not going to do onehot encoding , instead we use factor function. It transform categorical to numeric categories it will see the variables as factors.
+'c' is vector in R.
+
+random state: 
+going to have same logical results. If we don't put you might have different results. So we use random state and set it to same number so that we have same 
+results. Like random state in python we have seed in R.
+
+Feature scaling:
+age,salary is not in same scale. This will cause some issue because lot of ML models are based on euclidian distance. (age, salary) for suppose. Euclidian distance
+would be dominated by salary. 2 methods standardization and normalization.
+No need to fit for X_test because it is already fit for training set. 
+Do we need to scale dummy variables. It depends on the context. If we scale we loose the interpretation which observation belongs to which country.
+Even if sometimes ML models are not based on euclidian distances still we need to do feature scaling as algorithm converges much faster that will be the case 
+of decision trees. If we don't do feature scaling for decision trees they will run for longer time.
+We don't need to apply fetaure scaling for dependent variable Y.
+Factor in R is not a numeric number.
+
+--------------------------------------------------------------------------------------------------------------------------------------
+------------- Simple linear regression:
+
+It finds the line which has minimum sum of sqaures for thhe best fit line and is called as ordinary least squares method.
+
+For simple linear regression we are not going to apply feature scaling. As in X_train the no of years of experince as they are originally. 
+from linear_model library we are going to import linear_regressor class. Any class contains method so we use fit method.
+press comand+i to get the details of the class.
+We will create a vector of predicted values that is y_pred.
+In test set visualization there is no need to use plt.plot since regressor is already trained on training set whether we replace with train set or test set
+we will obtain the same regression line.
+
+In R we use lm function. Formula i.e salary is proportional to years of experience. 
+To know about the summary of regressor use summary(regressor) in console. It tells about coeffiecient of linear regression and also about 
+statistical significance of coefficient. Years of experience is highly siginificant it can either have no star, single star, two star, three star.  
+No star means no statistical significance.
+3 star means high statistical siginificance. Since *** year of exp is highly siginificant with salary.
+
+P value is other indicator of statistical significance.
+Lower the p-value more the significance i.e more impact that independent will effect dependent variable. Usually good thresold value for p-value is 5%. Which
+means that when we are below 5% the independent variable is highly siginificant. When above 5% the independent variable is less siginificant.
+
+To plot the points use geom_point and to plot the regression line use geom_line.
+------------------------------------------------------------------------------------------------------------------------------------------
+-------------- Multiple linear regression:
+
+Company wants to know if there is any colleration between profile and independent variables.
+Here state is categorical variable so we need to create dummy variables. When newyork is 0 whole D1 would become 0. So the whole calfornia would be included
+in b0. It is bad idea to include both dummy variables.
+Dummy variable trap:
+We can never include both dummy variables at same time because it is basically like duplicating a variable as (D2 = 1-D1). The phenomenon where one or several 
+independent variables in linear regression predict another is called multicollinearity. The model cannot ddifferentiate between D1 and D2 and is called
+dummy variable trap.
+
+Optimal model using backward elimination:
+For caalculating backward elimination we use statsmodels.api 
+in stats model api we need to add column x0 =1 so that b0 term would be there.
+
+from statsmodel will call OLS library (ordinary least sqaures). To find the significance level of each variable using summary().
+In the last round we have doubt whether to keep or eliminate marketing spend i.e 5. so we will se other criteria like r2 square. 
+
+In R library takes care of everything so dummy variables state2, state3 are present. R doesnt fall in to dummy variable trap so state1 was not present.
+Both R and python takes care of dummy variable trap. 
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+--------------- Polynomial regression:
+
+X is seen has a vector of (10,)  but when we build a machine learning model and especially this regression model we want our matrix of features to consider as
+as always matrix not as vector. To specify the matrix we will consider upper bound of X.
+
+It doesn't make any sense to split the dataset into train_test since only 10 observations.
+we have to create x_pol to transform x into x1 + x1**2 + X1**3 etc  Poly_reg  is tool that is used to add additional polynomial terms. Poly_reg included column
+with  1 i.e constant b0.
+Now if we want to increment X by 0.1 rather than 1 we use complex plots like X_grid
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+--------------- Support vector regression:
+We have penalty parameter 'C' to play wiith to regulate overfitting.
+ Kernel is one which is linear svr or polynomial svr or guassian svr or sigmoid svr. The one we use is rbf as we know our problem is non-linear so we shouldn't 
+use linear kernel here. An svr with linear kernel would make linear ML model. POly and rbf would work for our problem i.e non-linear.
+
+If we observe the graph the blue line is  line which is wrong. For most ML models there is need to apply feature scaling because libraries or classes include 
+feature scaling in them. Here we are using less common class i.e SVR and this class doesn't seem to appluy feature scaling in them.
+If we keep single bracket it will be vector of 1 element. so we keep two brackets to create array like matrix.
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+--------------- Decision tree regression:
+
+CART - classification and regression
+Two independent variables x1 and x2 will predict Y we cannot see Y because it is 2 dimensional plot. 
+Once the decision tree is run in the regression sense of it, scatter plot will be split up into segemnts. How and where the split is conducted is determined by
+the algorithm i.e information entropy. Information entropy means when i perform a split this increasing the amount of information we have about our point i.e 
+grouping all the points.  The algorithm know when to stop when there is certain minimum for information to be added and once it cannot add anymore  information 
+to our setup by splitting these leaves. Each one of these split is called leaves. By splliting up these leaves algorithm stops when we have less than 5% of points.
+The final leaves are called terminal leaves.
+How are we going to predict the value of y for new observation. It takes the averages of each of the ter leaves that will be the value for new observation.
+At last the values are assigned to each tree based on several conditions..
+
+mse- mean squared error - sqaure of difference between predicted and actual.
+random state- we want to get the same results.
+If we observe the shape, as krill explained the algorithm of decision tree regression is that by considering the entropy and information gain it is splitting 
+the independent variables into several intervals. In the intuiation tutorial we have two independent variables so the different intervals form average of 
+values, but here we are in one dimension the algorithm will take the values of one independent variable i.e here we have interval. But what we have observed from
+intuiation tutorial is taking the average of each interval. If it is taking average inetrval the straight line is not horizontal what decision tree doing is
+that in each interval it is calculating average of dependent variable salaries and therefor for all the levels contained in this interval the value of prediction
+should be a constant equal to the average of  inetrval. Here if we see it is not contant, prediction here is not as same as prediction either it is considering
+infinity of intervals with different constants in each infinite intervals or we have problem. So it is defintly 2nd problem. Here we plotting for each interval 
+incremented by 1. In previous models either linear or non-linear the values are continous where as Here it is non-linear and non-continous regression model.
+Decision tree is non-linear and non-continous ML model. Best way to visualize is to change the resolution. As explained it split the independent variable into 
+different intervals so we can see clearly what inetrvals are. Decision tree regression model is considering average of dependent variable in each of the
+intervals.
+
+Decision tree regression model is in not interesting model in 1D but it is very interesting in more dimensions.
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+------------- Random forest regression:
+
+Ensemble- Same algorithm multiple times. By default this algorithms are set to 500 trees in that way we are predciting based not on one tree but on forest 
+of trees that improves the accuracy of prediction. Ensemble algorithms are more stable because any changes in dataset could really impact one tree but them to 
+impact for forest of trees is much harder.
+
+Random forest is team of Decision tree. The ultimate prediction of random forest is simply the average of different prediction of all the trees in the forest.
+
+n_estimators -- no of trees in the forest default 10 trees
+With 1 tree we obtained the shape of stairs and it is non-linear and non-continous model. It is non-continous model as expected. We simply get more 
+steps in the stairs. We get more steps because as whole range of levels is split into different intervals because random forest is calculating many different
+averages of its tree predictions in each of these intervals. If we add more n_estimators it doesn't mean that we get lot more steps in the stairs. The more 
+no of trees the more the average of predictions made by trees is converging to same average. 
+
+----------------------------------------------------------------------------------------------------------------------------------------
+-------------  Evaluating regression models
+
+R-square:
+Insted of drawing regression line draw the average line yavg. Now calculate the distances and square them. We are trying to fit the line to minimize the sum of 
+squares of residuals as minimum as possible. R-square tells how good is our line comapred with average line. We have to minimize ssres it goes smaller and
+R-square is 1 is ideal scenario. Closer the r-square to 1 the better. R-square can be negative when ssres fits the data worse.
+
+Adjusted R-square:
+We talked about R-square for simple linear regression. The same concept apply for multi-linear regression same R-square. 
+When we add more variables to the model i.e another independent variable. We have doubt like may adding 3-variable will make the fit more better, how can
+we judge that after 3rd variable look for R-square did the R-square become better or worse. Because of this R-square will never decrease. If we add new 
+variable that new variable has two possibilities 1) Minimize SSres  and increase R-square 2) coefficient of new variable will become Zero so R-square remain
+same.  There will always be slight corellation between independent and dependent variable i.e y and 3rd variable the regression process pick it up and 
+give the coefficient and R-square would propably decrease by tiny little value or increase by tiny little value. So that is the problem of R-square you 
+can add variables and you would not know these variables are helping your model or not helping because R-square is biased as it is basically always increasing
+regardless of actual improvement or nonimprovement. So we consider different parameter for fit i.e adjusted R-square.
+
+P- no of regressor or no of independent variables.
+Also adjusted R-square has penalization parameter it penalizes for adding independent variables that don't help your model. When P increases denominator
+increases and whole part increase and ratio increases and whole expresses decreases.
+As P Increase Adjusted R-square decreases.
+When R-square increases Adjusted R-square increases.
+
+There is battle i.e by adding new variable there is increase in R-square and also increase in adjusted R-square.
+Also Increase in P adjusted R-square decreases. 
+
+Interpreting coeffecient:
+If the sign the +ve mean independent variable is correlated with dependent varaible. Both the trends would be same side.
+If the sign the -ve mean independent variable is non-correlated with dependent varaible. Both the trends would be opposite side.
+Magnitude is always tricky with regression be careful. Magnitude of R.D spend > M.Spend don't get conclusipon from that. When increase M.spend by changing
+into dollars then it's magnitude increases so dont get into conclusion.
+Always say magnitude in units of independent variable. So R.D.spend has greater impact on profit per unit of R.d spend. We can say the above point if both units 
+are measured in dollars i.e R.d spend increase profit increase.
+
+===============================================================================================================================================================
+---------------  Logistic regression 
+
+If the predcting boundry is straight line beacuase the logistic regression classifier is linear classifier. If it is 3dimension it could be straight plane 
+separating.If the non-linear classifier boundry won'd be straight line.
+If it is non-linear classifier then the curve won't be straight line and it could classify more things correctly.
+
+================================================================================================================================================================
+---------------  K-NN Intuition:
+
+When we need a new data how do we classify that? Will it fall into red category or green category. After K-NN it falls into red categor
+we can use euclidian distance or manhattam distances.
+n_neighbors - which no of neighbors we want to chosse.
+metric-  for chossing euclidian distance we have to pick minkowski metric
+P-   1 for manhattan , 2 for euclidian
+
+It is non-linear classifier as the decision boundry is non-linear
+==============================================================================================================================================================
+---------------  SVM intuition:
+
+How are we going to separate these lines means that decision boundry is important for us when we start adding new points. There is lots of lines that we create
+to separate this two classifiers.
+SVM searches the line through maximum margin. It is the line that separate the two classes of points and at same point it has maximum margin. This line is
+drawn equidistant from first points on both the sides and the sum of distances must be maximized in order to be the line of SVM. These points are called 
+support vectors and are supporting the whole algorithm. Even if we get rid of all these points nothing would change algorithm was exactly same. 
+other points dont contribute to the result of the algorithm only these points are contributing called support points or vectors. In realty they are called vctors. 
+This why becuase in multidimesional space when we have more than just two variables we can 3,5 or 100 variables each point is no longer a point because we 
+can't visualize in 2-D plane or 3-D plane, so each of these points is considered as vector in multi dimensional. 
+
+Special about SVM:
+Other ML models will learn what Apple actually is. SVM instead of most stock standard apples or most stock standard oranges they actually look for apples which
+are very much like oranges, they look oranges which are very much like apples. THose are the support vectors and they are very close to the boundry, so that 
+red one would be close to green one and green one would be close to red one. Therefore SVM in that sense is more extreme type of algorithm or very risky type
+of algorithm because it looks at very extreme case which is close to boundary and uses that to construct its analysis. 
+
+C- penalty parameter of error term
+Kernel- basic kernel is linear 
+degree- in case if we chosse polynomial kernel we can use degree parameter
+gamma- kernel coeffecient for rbf, poly, sigmoid
+
+Visulazation it is straight line since we choose linear kernel. 
+
+============================================================================================================================================================
+---------------  Kernel SVM:
+
+What happends when we cannot find a boundry. Because the data points are not linearly separable. SVM assumes that data is linearly separable also it helps us
+choose the optimal decision boundry out of multiple decision boundry that we can draw. Wherea when not separable we cannot find single decision boundary 
+so SVm doesnt work. We will take this dataset and add extra dimension to this so that higher dimensional space to space that we are dealing with and make
+it linearly separable. Also kernel trick is there.
+
+Map it to higher dimension in order to help support vector and help SVM to make lienarly separable. Again we will map it to original space and we would know how
+to functionally separate the green from red. Mapping to higher dimension is highly compute intensive. So it is not best. Will use kernel trick.
+
+kernel trick:
+K- stands for kernel, x is some point in dataset l for landmark i means several iteration i.e landmark. when we visualize this function it will look like this.
+(0,0) that where the landmark is located. The vertical axis represent the results that we calculate this function. The tip is in the middle of x,y corinate plane.
+we project this and at the bottom we have this landmark. From this we would be measuring the distance. 
+Suppose if we take more distant point, calculating distance would give large value and then apply exponent we will get small value close to 0. That means 
+when we are far away from the landmark from the centre we get 0. 
+suppose if we take point close to landmark then it would large value converges to 1 and would climb the hill upto the top. So that's how we get the 
+image in the kernel function. We are going to use this kernel function to seperate our dataset.
+
+First we will take the landmark and put it somewhere among our dataset. There is a way to find this optimal place to put the landmark. The circle that is coming 
+from the kernel function is actually projected onto out visualization. It allows us to take all our data points that are within the circumference and help 
+them assign a value that is above 0. All the red points would get 0. All gren points would get the value that is above 0. That is how we separate two classes.
+sigma --- determines how wide the circumference is
+If we increase sigma this circumference increases and would take the more space up the plane.
+By finding the correct sigma we can find the correct kernel function to assign zero values to all the points that we don't want to be classification and points
+to have classification. If we look the whole computation is happening in 2-D space that how kernel trick works.
+
+Types of kernel:
+rbf kernel - radial bases function or Guassian kernel 
+sigmoid kernel - assence is same we still select the landmark and then depending on the distance from landmark different results will occur. 
+					Anything right will have high value
+polynomial kernel-  polynomial which dictates hwo kernel behaves. 
+
+=======================================================================================================================================================
+---------------- Naive Bayes:
+
+Person who wlaks to work. person who drives to work. What if we have new data point how are we classifying them. 
+1) what is the propability that this person walks given his features(X).
+2) what is the propability that this person drives given his features(X). 
+Then we will compare these two propabilities and based on propabilities we will assign the class.
+step1: calculate the prior propability
+step2: calculate mariginal likelyhood. Select a radius draw circle on your own on observations. All of the points inside the circle we are going to treat them as
+similar interms of features to the point that we had.How do we calculate the probability of X and what is the probability of X.
+Well the probability of X is the probability of a new point that we add to our data set being similar in features to the point that we actually are adding to it.
+
+Naive bayes theorem is based on independence assumptions, which are not correct. Here we got age and salary based on those we use naive bayes. It actually 
+requires age and salary to be independent. salary have to be independent and that is like a fundamental assumption of the bayes theorem and then you can 
+only apply it and then you can't get those probabilities and so on. But in our case if you just think about it fundamentally it is probably not the case.
+Probably there is some sort of correlation between age and salary because as a person gets older their experience grows their their number of years that 
+they've spent and the workforce grows and therefore their salary grows so it's natural for the salary to grow if age. therefore given that they are not 
+independent you can't really apply the Bayes Theorem and therefore you can apply the base algorithm to machine learning and that's why it's called Neive bayes
+algorithm because oftentimes it's applied even though the variables or the features are not independent or not completely independent and it's still 
+applied and it still gives good results.
+
+no need to calculate p(X) as it is cancelled both sides.
+
+when we have two classes we compared the probabilities that person exhibits. When we have 2 classes it always add upto 1. If we have 3 classes it will be 
+difficult.
+==========================================================================================================================================================
+----------------  Decision tree classification:
+
+How the splits are selected. Split is done in such a way it maximizes number of certain category in each of these splits so to maximize. For instance we want 
+maximum Red's categories here and here is why it's still the same but then the next split maximizes the number of green here and them more red here.
+
+we will get used to this entropy criterion for the information gain and And basically this entropy here is as it says a function that measures the 
+quality of the splits so that the final nodes of your tree you want each node to be as much homogeneous as possible that is with you know users of the 
+same class and after each split the more homogeneous is a group of users the more the entropy is reduced from the parent node to the group child node.
+And so after the split if the entropy in the resulting child node is zero then that means that this child node is a fully homogeneous group of users you know 
+with only users of the same class and the information gain mentioned here is basically the difference between the entropies before and after split. 
+So that means that after a split the higher the information is and the more homogeneous groups there will be after the split.
+
+The prediction boundry is composed of only horizontal and vertical lines. It is making some splits based on conditions on independent variables likes age and
+salary. So these are all conditions based on intervals of the independent variables we can clearly see that here that's where the prediction boundary is 
+only composed of horizontal lines and vertical lines. Like for example this one well there clearly was an effort here to catch this red user who is mostly
+in the green region. However is there something that is striking your attention and telling you be careful. Well yes we should be careful because this kind 
+of looks like overfitting because you see it's trying to catch every single user into the right category.
+
+==========================================================================================================================================================
+----------------  Evaluating a classifier:
+
+Cummulative accuracy profile- 
+You can imagine the better your model the larger will be the the area under the slides so the area between the red and the blue lines. It will increase as 
+your model gets better and if your model is worse then this red line will be closer to the blue line so it will be closer to random.
+
+Now let's say we ran another regression model and this time we used less variables listen dependent variables or just because we had less access to 
+independent variables or we didn't see that there's a multicollinearity effect in a model or something else that went wrong. And that model because it 
+will be worse. This is what it's kept curve look like. And therefore by plotting the cap curves you'll be able to compare models to each other and 
+understand how much gain this is also sometimes called the gain chart.
+
+Well it's kind of intuitive that the closer your red line is to the gray line the better you model the closer to the blue line the worse. So how can we 
+quantify this effect. Well there is a standard approach to calculate the accuracy ratio and to calculate accuracy ratios you take the area under the 
+perfect model or the perfect line which is color in gray here and it's called aP. And then you need to take that area under the red line which is 
+colored in red here which is aR and then you need to divide one by the other. So you need to divide aR by AP and then this ratio that you get is 
+obviously between 0 and 1. The closer this ratio is to 1 the better the further it is away from one and close to zero the worse.
+
+==========================================================================================================================================================
+-----------------  K-mean clustering
+
+WCSS- should be less. It would be 0 if no of data points= no of clusters as distance would be 0. How to find the optimal fit.
+WCA says there is actually another name for Within just the sum of squares and that's called inertia
+ 
+init- random intialization of initial centroid. As we doesnt want to fall into random intialization trap we choose kmeans++
+max_iter- This is the maximum number of iterations there can be to find the final clusters when the Kmeans algorithm is running.
+n_init- which is the number of times the Kmeans algorithm will be run with different initial centroid.
+
+=======================================================================================================================================================
+------------------ Hierarchical clustering:
+
+2types of clustering- agglomerative and divise approach
+agglomerative- bottomup 
+divisive- topbottom
+
+we talked about euclidian distance for data points. But here proximity of clusters i.e closenees of clusters. 
+The way the hierarchical clustering algorithm works is that it maintains a memory of how we went through this process and that memory is stored in 
+a dendrogram and that's exactly what we're going to talk in the next tutorial and once we've covered the Dendrograms it will make total sense why 
+the hierarchical clustering algorithm does what it does and how it works.
+
+Height of the bar is the euclidian distance between them. And it also represents the computed dissimilarity between the two points of the two clusters.
+We know how dendrograms are constructed. In the next tutorial we will learn how to use them to enhance our or actually execute our hierarchical clustering 
+algorithm.
+
+We need to do with the Dendrograms or what we can do is look at the horizontal levels and set thresholds so we can set heights thresholds or distance 
+actually distance thresholds are also called dissimilarity thresholds because this vertical axis measures the median distance between points which
+also represents the dissimilarity between them or points or clusters. How to find optimal number of clusters? is dendrogram giving any idea?
+So one of the standard approaches is just to look for the highest vertical distance that you can find on the to. So basically any line that will not cross 
+any horizontal lines. So out of all of the lines that you have here which is the longest that doesn't cross any extended horizontal lines i.e blue line.
+
+Python programming first thing we're going to do is to import scipy it is open source Python library that contains tools to do hierarchical clustering and 
+building dendrograms. So to import Type-I we actually we're not going to import the whole scipy library.
+linkage itself is the algorithm of hierarchical clustering.
+method- ward method it is method that minimize variance within cluster.
+Remember in Kmeans when we were trying to minimize the within cluster sum of squares to plot our elbow method chart Well here it's almost the same the only 
+difference is that instead of minimizing the within cluster the sum of squares we are minimizing the with cluster variants.That is the variance within each 
+cluster.
+calculate the largest vertical line without crossing any horizontal line. Then count the no of vertical lines i.e no of clusters.
+affinity- distance to do the linkage  i.e euclidian distance
+linkage- ward linkage
+
+===================================================================================================================================================
+--------------- Association rule mining - Apriori  -----  Recommendation system
+
+Apriori algorithm has support, confidence and lift
+1) first we need to find support
+2) next to find out confidence i.e Movie1 gone to Movie2
+3) lift = confidence / support
+The rule of the highest lift given these criteria is going to be the strongest rule and that's the one you might want to look into first right.
+
+Apriori is expecting as input is actually a list of lists. That is a list containing the different transactions each one put in a list.Each list corresponds to 
+one transaction.
+We are going to import classes and functions from apriori.py unlike the open source library like scikit learn.
+And now we have some keyword arguments which are very important arguments when you use the a apriori model for your business problem because these 
+arguments will actually depend on your business problem it will depend on your data set the number of observations you have in your data set because of course
+your minimum support is not going to be the same whether you have 1000 transactions or 100000 transactions. And same for the confidence and the left.
+
+For min_support - we need to find the products that are purchased frequently i.e items that are bought atleast 3 or 4 times in a day.
+So in R issue follow the our tutorials the apriori model is implemented in a package called a Rolls and this package contains some default value for 
+the confidence. So what we did is we started with the default value 0.8. But then we realized that we got two obvious rules because the confidence was too high.
+You know confidence of open 8 means that the rules has to be correct in 80 percent of the time that is in 80 percent of the cases four times out of five.
+min_confidence- we shouldn't set the confidence too high which wouldn't get any rule that is correct.
+min_lift- 
+So same here we can try different values of the minimum lift but what we would like to have is some rules that have lift atleast 3 if we get some rules that 
+have lift above three. Well these are actually some good rules because you know the left is a great insight of the relevance and the strength of rule.
+min_lenght- rules composed of atleast 2 products.
+
+Here 
+support is 0.0045
+confidence is 0.2985
+lift- 4.84 i.e releavance of the rule
+
+=================================================================================================================================================
+--------------- Association rule mining - Eclat
+
+It is very simple after apriori i.e simplified version
+In eclat model we only have support.
+
+If you want to have a serious analysis about how to create some added value for your business optimize the sales and the revenue you should go for apriori.
+But if you are looking for some very simple informations like the sets of products most frequently purchased together then you can go for a eclat.
+
+=================================================================================================================================================
+--------------- Reinforcement learning- Upper bound
+
+It's very interesting solution much more sophisticated and then just selecting randomly or running an AB test and then selecting the option you know that one.
+So you know if you're in advertising or if you've got campaigns or if you come across problems that are similar to this always just remember about 
+upper confidence bound and you can apply this in your work as well.
+
+CTR- click through rate 
+we are going to try to optimize the click through rates of different users on an ad that we put on a social network and therefore that's the name of our 
+data sets.
+
+So we have to find that ideal balance or tradeoff between exploration and exploitation.
+
+There's going to be a specific strategy to do this. And the key thing to understand about reinforcement learning is that this strategy will depend at each
+round on the previous results we observed at the previous rounds. So for example when we are at around 10. Well what happens behind the scene is that the 
+algorithm will look at the different results observed during the first ten rounds and according to these results we'll decide which version of the ad it will
+show to the user. That's why reinforcement learning is also called Online learning or interactive learning. Because the strategy is dynamic it depends on 
+the observations from the beginning of the experiment up to the present time. This is just some simulation of what is going to happen when we show the 
+ads to the users. In other words this is what God knows because we have no idea on which ad each user is going to click on.
+And so we're going to build two algorithms the UCB algorithm and the Tompson something algorithm and these algorithms will decide from here which version 
+of the ad to show to the user. And depending on the reward the ads will get that as reward equals 1 when the user clicks on the ads or equals 0 if the user 
+doesn't click on the ad will decide which ad to show to the user at the next round. And so of course the goal of the algorithm is to maximize the total reward.
+That is the sum of all the different rewards and each round obtained by the different selections of the ads.
+
+So we always get a total reward close to 1200. So let's keep this resolved in our minds because then we'll compare it to the total reward that we get.
+Thanks to our more advanced algorithm which has the upper confidence found and then the Tomsen sampling algorithm.
+
+--------------- Reinforcement learning- Thompson sampling
+
+The upper confidence Bond was a deterministic algorithm where everything was strict you know everything was OK so whichever one has a some upper confidence 
+us on we're going to choose and so on.
+
+we are going to use a function of Python which is the random betavariate function which will give us exactly what we want.
+That is it will give us some random draws of the beta distribution of parameters that we choose and as we can see on the slide here the first parameter 
+is the number of times the adversion I got we were one plus one and the second parameter is the number of times the add I got we've got 0 plus 1.
+
+======================================================================================================================================================
+------------------- Natural language processing
+
+We use TSV file instead of CSV file. quoting= 3 means we are ignoring double quotes
+we'll get rid of all the known useful words like that here or on or another.
+Using sub function we can eliminate comma, qquotation etc and can keep only alphabets. To avoid clumsing of 2 words we keep '' to show distinction between words. 
+
+So basically 'this' word is totally irrelevant and that's why we can remove it because you know our goal in the end is to avoid too much sparsity in the 
+sparse matrix. And you know since in the sparse matrix each word has its own column. Well it would be totally unuseful to attribute a column for 'this' word 
+this here and the same kind of words like that.
+
+Stemming is about taking the root of the word. 
+We have to join the string at last to form a string after stemming
+Actually we creating a corpus of 1000 clean reviews.In natural language processing a corpus is a common wordand basically a corpus is a collection of text 
+that can be anything. Some reviews as what we are dealing with right now or some longer text like articles books web scrapped, HTML pages Well any kind of 
+text you want and a corpus as a collection of text of the same type.
+Actually we won't keep the word that appears only minimum no of times. We will remove all the words that appear rarely.
+
+unique words of these 1000 reviews and basically then what we'll do is to create one column for each word. So of course there are a lot of different words 
+here so we will have a lot of columns and then we will put all these columns in a table where the rows are nothing else than the 1000 reviews.
+So each cell of this table will correspond to one specific review and one specific word of this corpus. And in this cell we're going to have a number and 
+this number is going to be the number of times the word corresponding to the column appears in the review.
+So we will basically get a table with a lot of zeroes. And actually this table is a matrix and a matrix containing a lot of zeroes is called a sparse matrix.
+And the fact that we have a lot of zeroes is called sparsity and that's a very common notion in machine learning.
+
+Let's create our bag of words model. So as I just said we will create this bag of model through the process of tokenization. And of course you can imagine 
+that if we had to do it by hand well it would be quite complicated. Will use sklearn.feature_extraction.text to do this. This will create a huge sparse matrix.
+So basically what I'm showing you here is that what we did here in the text manually. Well there are some options that we can do directly in this countvectorizer.
+Inorder to have matrix of X we add toarray().
+
+If we specify max_features in CountVectorizer we can remove the non-relevant words that appear only in one or two of use. It also reduces sparcity.
+The second thing I wanted to say about sparsity is that we can also reduce it to two dimensionality reduction techniques which we will see later in this 
+course in part 9 dimensionality reduction. 
+
+==========================================================================================================================================================
+----------------- PCA
+
+The goal of PCA is to identify and detect the correlation between variables. If there is a strong correlation and it's found then you could reduce the 
+dimensionality which really what PCA is intended for. You find the directions of maximum variance in high dimensional data and then you project it into a
+smaller dimensional subspace. While retaining most of the information usually again with PCA The goal to reduce the dimensions of a D dimensional 
+dataset by projecting onto a k dimensional subspace where k is less than D and for a overall breakdown and wrap up of the PCA.
+
+We would need one two three four five six seven eight nine 10 11 12 13 dimensions.That's impossible.So what we need to do is apply some dimensionality 
+reduction techniques to extract two independent variables. that explain the most the variance and then we'll be able to see the prediction regions 
+and the prediction boundary and therefore will clearly be able to see where the customer segments are and where are these predictions that the 
+customer segments are according to the extracted features of all the informations of our independent variables.
+Feature scaling and features scaling must be applied when we apply dimensionality reduction techniques like PCA or LDH.
+
+n_components- this is the number of extracted features you want to get. That will explain the most the variance and depending on what variance you 
+would like to be explained you will choose the right number of principal components. But the problem now is that we know we want to get two principal 
+components eventually to be able to visualise this training set result and the test results but we don't know how much variance these two components explain.
+So we need to check that. You know we need to make sure that the two first principal components that explain the most variance don't explain it to low 
+variance and therefore we are not giving input to here. We are going to input none because then we will create a vector that we're going to call explained 
+variance and we are going to see the cumulative variance explained by all the principal components. So you will see this will get more clear when we 
+have a look at the vector.
+
+we are going to create this explains variance vector that's going to contain the percentage of variance explained by each of the principal components 
+that we extracted here. So explained variance and then the trick is to use a natural beauty of the PCA object. So we take our object PCa and that and then 
+attribute that we want to take is the Explained variance ratio here that will give us the list of all the principal components and we will get the percentage
+of variance explained by each of them.
+So as you can see since we originally had 13 independent variables Well it extracted 13 principal components.So these 13 components are independent variables
+but these are not the original independent variables that we had in our data set. These are the new extracted independent variables but that explained 
+the most the variance.
+
+so we can see that if we take the first 2 principal components here well they will explain 56 percent of the variance and that is pretty good.
+That is actually OK to make a classification more out of it. And so now what we're going to do is take these first two principal components that are 
+going to be the two new independent variables of our dataset.
+
+Confusion matrix is 3*3 i.e actual - horizontal   predicted- vertical
+
+=========================================================================================================================================================
+-----------------  LDA
+
+It's used in the pre-processing step for pattern classification and machine learning algorithms. Its goal is to project a data set onto a lower dimensional 
+space. Sounds similar to PCA but LDA differs because in addition to finding the component axes with LDA we are interested in the axes that maximize the 
+separation between multiple classes.
+The goal of LDA is to project a feature space onto a small subspace while maintaining the class discriminatory information.
+
+We don't need to build a vector of explained Variance or any other kinds of vector like some sort of class observability vector.
+
+========================================================================================================================================================
+-------------- Kernel PCA
+
+PCA & LDA - work when the data is linearly separable.
+Another feature extraction technique adapted for non-linear problem. So this technique is called Kernel PCa and is kernelnalized version of PCA where we 
+map the data to a higher dimension using the kernel trick. And then from there we extract some new principal components and we're going to see 
+how it manages to deal with non-linear problems.
+
+Remember the problem was that this straight line here is actually the prediction boundary generated by the logistic regression model. But since the 
+logistic regression model is a linear classifier then it has to be a straight line here separating the data and therefore remember the problem is that 
+it can not make some kind of a curve here to catch these green users that should be in the green region.
+
+There is still going to be the prediction boundary of the logistic regression model but since we're going to apply kernel PCA Well this will manage to 
+apply some trick where the trick is actually the kernel trick to map the data into a higher dimension and then apply PCA to extract new components that
+will be new dimensions that explain the most variants.But thanks to this kernel trick. Well you'll see that we'll manage to get some new dimensions in 
+which the data will be linearly separable even by a linear classifier like logistic regression.
+
+Well perhaps you can guess what's going to happen but as I told you we're not expecting a nonlinear cllasifiaction with a curve to prediction boundary. We're 
+still expecting a straight line but you will see that this time the straight line is perfectly going to separate our dataset. The two classes in our data set 
+and that is thanks to these new extracted features. But now the most important thing that changed and that we need to highlight here is the fact that our
+two classes the red class and the green class are now much better separated by this straight line here. We have still some green points in the red region and 
+some red points in the green region but we can sense that we are in a new feature space where the observation points of the two different classes here
+are now much better separated. And this new feature space that we're in right now is formed by these principal components that were extracted through 
+kernel PCA.
+
+What happened behind the scenes because indeed we have this very simple result here with these two classes separated by a straight line with what happened 
+behind the scenes is that our original dataset in our original feature space was mapped to a higher dimension using the kernel trick to avoid to
+highly compute intensive computation.And then by mapping our dataset and the original feature space to this high dimension well for us that
+created some new dimensions and mostly that created a new feature space where our data was then linearly separable. But by doing that we had more dimensions 
+than the original number of dimensions. So we still needed to apply the PCA dimensionality reduction technique to end up with a lower number of dimensions.
+
+============================================================================================================================================================
+------------ Model selection & boosting
+
+we can train the model and test them all of ten combinations of training and test sets and that will already give us a much better idea of the model 
+performance because what we can do have two words is take an average of different accuracies up to ten evaluations and also compute the standard
+deviation to have a look at the variance. So eventually our analysis will be much more relevant and besides we'll know in which of these four categories will 
+be because if we get a good accuracy and a small variance will be on the lower left one if we get a large accuracy and a high variance we will be on the 
+lower right one if we get a small accuracy in a low variance.
+
+So that's also very interesting and to do this we do the same we take are accuracy's vector then we add a dot and then we use the standard deviation 
+function that will give us the standard deviation of this accuracy's vector. we get a 6 percent standard deviation. So what does that mean.
+That means that the average of the differences between the different accuracies that we'll get when evaluating our model performance and the average 
+accuracy that is 90 percent is 6 percent. So that's actually not too high variance. That's OK because that means that when we evaluate our most performance 
+while most of the time will be around 84 percent and 96 percent so eventually that means that we are in this low bias and no variance category.
+
+Well grid search will tell us if we should rather choose a linear model like SVM or a non-linear model like kernel as yet.
+Penalty paframeter 'C' more you increase this penalty parameter C the more it will prevent overfitting. But be careful you should not increase it too much 
+because otherwise you will get a new problem which will be under 50.
+gamma - we don't know the range of values of gamma how we get?. If we see 1/n_features in our case n_features= 2 and then gamma= 0.5
+
+The third parameter is the scoring metric you want to use to decide what those best parameters are. Because you know grid search is going to select the best 
+parameters based on one performance metric and it can be the accuracy it can be the precision it can be the recall.
+Now fourth parameter is CV That means grid search is going to evaluate the performance of each of the model with their own set of parameters.
+And of course when evaluating the accuracy of these models it's going to do it through k-fold cross-validation because as we saw in the previous tutorial the 
+first tutorial of the section Well K-fold cross-validation is the relevant way to evaluate your model performance.
+n_jobs- allocate all the CPU if we use large dataset
+
+=============================================================================================================================================================
+------------ XGBoost
+
+It is one of the most popular algorithm in machine learning that is quite recently popular but still it is definitely a very powerful model especially if 
+you work on large data sets. It will offer you very high performance while being fast to execute. And speaking of performance and execution speed it is 
+important to remind that  XGboost is the most powerful implementation of gradient boosting in terms of model performance and execution speed.
+
+Features scaling was totally compulsory no questions asked features must be applied for deep learning. But the good news is that for actually boost Well 
+since XGBoostis a great and boosting model with decision trees well accordingly features scaling is totally unnecessary and thats one of the very good
+thing about XGBoost Besides its high performance and its fast execution speed.
+
+we got 85% accuracy 
+std 1%
+In general we get accuracy in the range of 84% to 87%(accuarcy-std)
